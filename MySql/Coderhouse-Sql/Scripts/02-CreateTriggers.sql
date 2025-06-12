@@ -1,0 +1,207 @@
+USE MY_SHOP;
+
+
+-- //////////////TRIGERS PARA LA TABLA PRODUCTS//////////////
+
+/*Creacion de Trigger "TRG_INSERT_PRODUCTS", se dispara al insertar registros en la tabla "PRODUCTS" guardando en el campo "NEW_DATA" 
+de la tabla "LOG_PRODUCTS" la concatenacion de los datos insertados en el registro se paradados por ";" */
+
+DROP TRIGGER IF EXISTS TRG_INSERT_PRODUCTS;
+DELIMITER $$
+CREATE TRIGGER `TRG_INSERT_PRODUCTS`
+AFTER INSERT ON PRODUCTS
+FOR EACH ROW
+BEGIN
+INSERT INTO LOG_PRODUCTS VALUES (
+	DEFAULT,
+	'INSERT',
+	DEFAULT,
+	CONCAT_WS(';',NEW.ID_PROD, NEW.NAME, NEW.ID_ASSEMBLER, NEW.ID_TYPE, NEW.ID_CAT, NEW.PRICE, NEW.STOCK),
+	USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+/*Creacion de Trigger "TRG_UPDATE_PRODUCTS", se dispara al momento de actualizar un campo en la tabla PRODUCTS, guardando en el 
+ en el campo "OLD_DATA" de la tabla "LOG_PRODUCTS" la concatenacion de los datos el registro antes de la actualizacion.*/
+DROP TRIGGER IF EXISTS `TRG_UPDATE_PRODUCTS`;
+DELIMITER $$ 
+CREATE TRIGGER `TRG_UPDATE_PRODUCTS`
+BEFORE UPDATE ON PRODUCTS
+FOR EACH ROW
+BEGIN
+INSERT INTO LOG_PRODUCTS VALUES(
+	DEFAULT,
+    'UPDATE',
+    CONCAT_WS(';',OLD.ID_PROD, OLD.NAME, OLD.ID_ASSEMBLER, OLD.ID_TYPE, OLD.ID_CAT, OLD.PRICE, OLD.STOCK),
+    DEFAULT,
+    USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+/*Creacion de Trigger "TRG_DELETE_PRODUCTS", se dispara al momento de eliminar un campo en la tabla PRODUCTS, guardando en el 
+ en el campo "OLD_DATA" de la tabla "LOG_PRODUCTS" la concatenacion de los datos del registro antes de la eliminacion.*/
+DROP TRIGGER IF EXISTS `TRG_DELETE_PRODUCTS`;
+DELIMITER $$
+CREATE TRIGGER `TRG_DELETE_PRODUCTS`
+BEFORE DELETE ON PRODUCTS
+FOR EACH ROW
+BEGIN
+INSERT INTO LOG_PRODUCTS VALUES(
+	DEFAULT,
+    'DELETE',
+    CONCAT_WS(';',OLD.ID_PROD, OLD.NAME, OLD.ID_ASSEMBLER, OLD.ID_TYPE, OLD.ID_CAT, OLD.PRICE, OLD.STOCK),
+    DEFAULT,
+    USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+
+
+-- //////////////TRIGERS PARA LA TABLA SALES//////////////
+
+/*Creacion de Trigger "TRG_INSERT_SALES", se dispara al insertar registros en la tabla "SALES" guardando en el campo "NEW_DATA" 
+de la tabla "LOG_SALES"la concatenacion de los datos insertados en el registro se paradados por ";" */
+
+DROP TRIGGER IF EXISTS TRG_INSERT_SALES;
+DELIMITER $$
+CREATE TRIGGER `TRG_INSERT_SALES`
+AFTER INSERT ON SALES
+FOR EACH ROW
+BEGIN
+INSERT INTO LOG_SALES VALUES (
+	DEFAULT,
+	'INSERT',
+	DEFAULT,
+	CONCAT_WS(';',NEW.ID_SALE, NEW.AMOUNT, NEW.ID_CLIENT, NEW.ID_PAY, NEW.ID_EMPL, NEW.DATE, NEW.HOUR),
+	USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+/*Creacion de Trigger "TRG_UPDATE_SALES", se dispara al momento de actualizar un campo en la tabla SALES, guardando en el 
+ en el campo "OLD_DATA" de la tabla "LOG_SALE" la concatenacion de los datos el registro antes de la actualizacion.*/
+DROP TRIGGER IF EXISTS `TRG_UPDATE_SALES`;
+DELIMITER $$ 
+CREATE TRIGGER `TRG_UPDATE_SALES`
+BEFORE UPDATE ON SALES
+FOR EACH ROW
+BEGIN
+INSERT INTO LOG_SALES VALUES(
+	DEFAULT,
+    'UPDATE',
+    CONCAT_WS(';',OLD.ID_SALE, OLD.AMOUNT, OLD.ID_CLIENT, OLD.ID_PAY, OLD.ID_EMPL, OLD.DATE, OLD.HOUR),
+    DEFAULT,
+    USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+/*Creacion de Trigger "TRG_DELETE_SALES", se dispara al momento de eliminar un campo en la tabla SALES, guardando en el 
+ en el campo "OLD_DATA" de la tabla "LOG_SALE" la concatenacion de los datos del registro antes de la eliminacion.*/
+DROP TRIGGER IF EXISTS `TRG_DELETE_SALES`;
+DELIMITER $$
+CREATE TRIGGER `TRG_DELETE_SALES`
+BEFORE DELETE ON SALES
+FOR EACH ROW
+BEGIN
+INSERT INTO LOG_SALES VALUES(
+	DEFAULT,
+    'DELETE',
+    CONCAT_WS(';',OLD.ID_SALE, OLD.AMOUNT, OLD.ID_CLIENT, OLD.ID_PAY, OLD.ID_EMPL, OLD.DATE, OLD.HOUR),
+    DEFAULT,
+    USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+
+
+-- //////////////TRIGERS PARA LA TABLA CLIENTS//////////////
+
+/*Creacion de Trigger "TRG_INSERT_CLIENTS", se dispara al insertar registros en la tabla "CLIENTS" guardando en el campo "NEW_DATA" 
+de la tabla "LOG_CLIENTS" la concatenacion de los datos insertados en el registro se paradados por ";" */
+
+DROP TRIGGER IF EXISTS TRG_INSERT_CLIENTS;
+DELIMITER $$
+CREATE TRIGGER `TRG_INSERT_CLIENTS`
+AFTER INSERT ON CLIENTS
+FOR EACH ROW
+BEGIN
+SET @LASTNAME = NEW.LAST_NAME;
+IF @LASTNAME IS NULL THEN SET @LASTNAME = 'DEFAULT'; END IF;
+SET @PHONE2 = NEW.PHONE_2;
+IF @PHONE2 IS NULL THEN SET @PHONE2 = 'DEFAULT'; END IF;
+INSERT INTO LOG_CLIENTS VALUES (
+	DEFAULT,
+	'INSERT',
+	DEFAULT,
+	CONCAT_WS(';',NEW.ID_CLIENT, NEW.CUIL_CUIT, NEW.NAME, @LASTNAME, NEW.COMPANY, NEW.EMAIL, NEW.COUNTRY, NEW.ID_PROV, NEW.COD_POSTAL,NEW.ADRESS,NEW.PHONE_1,@PHONE2),
+	USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+/*Creacion de Trigger "TRG_UPDATE_CLIENTS", se dispara al momento de actualizar un campo en la tabla CLIENTS, guardando en el 
+ en el campo "OLD_DATA" de la tabla "LOG_CLIENTS" la concatenacion de los datos el registro antes de la actualizacion.*/
+DROP TRIGGER IF EXISTS `TRG_UPDATE_CLIENTS`;
+DELIMITER $$ 
+CREATE TRIGGER `TRG_UPDATE_CLIENTS`
+BEFORE UPDATE ON CLIENTS
+FOR EACH ROW
+BEGIN
+SET @LASTNAME = OLD.LAST_NAME;
+SET @PHONE2 = OLD.PHONE_2;
+IF @LASTNAME IS NULL THEN SET @LASTNAME = 'DEFAULT'; END IF;
+IF @PHONE2 IS NULL THEN SET @PHONE2 = 'DEFAULT'; END IF;
+INSERT INTO LOG_CLIENTS VALUES (
+	DEFAULT,
+	'INSERT',
+    CONCAT_WS(';',OLD.ID_CLIENT, OLD.CUIL_CUIT, OLD.NAME, @LASTNAME, OLD.COMPANY, OLD.EMAIL, OLD.COUNTRY, OLD.ID_PROV, OLD.COD_POSTAL,OLD.ADRESS,OLD.PHONE_1,@PHONE2),
+	DEFAULT,	
+	USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;
+
+/*Creacion de Trigger "TRG_DELETE_CLIENTS", se dispara al momento de eliminar un campo en la tabla CLIENTS, guardando en el 
+ en el campo "OLD_DATA" de la tabla "LOG_CLIENTS" la concatenacion de los datos del registro antes de la eliminacion.*/
+DROP TRIGGER IF EXISTS `TRG_DELETE_CLIENTS`;
+DELIMITER $$
+CREATE TRIGGER `TRG_DELETE_CLIENTS`
+BEFORE DELETE ON CLIENTS
+FOR EACH ROW
+BEGIN
+SET @LASTNAME = OLD.LAST_NAME;
+SET @PHONE2 = OLD.PHONE_2;
+IF @LASTNAME IS NULL THEN SET @LASTNAME = 'DEFAULT'; END IF;
+IF @PHONE2 IS NULL THEN SET @PHONE2 = 'DEFAULT'; END IF;
+INSERT INTO LOG_CLIENTS VALUES (
+	DEFAULT,
+	'INSERT',
+    CONCAT_WS(';',OLD.ID_CLIENT, OLD.CUIL_CUIT, OLD.NAME, @LASTNAME, OLD.COMPANY, OLD.EMAIL, OLD.COUNTRY, OLD.ID_PROV, OLD.COD_POSTAL,OLD.ADRESS,OLD.PHONE_1,@PHONE2),
+	DEFAULT,	
+	USER(),
+	CURDATE(),
+	CURTIME()
+);
+END $$
+DELIMITER ;

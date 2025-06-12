@@ -1,0 +1,22 @@
+*********************************************************************************
+**////////////////INSTRUCCIONES PARA CREACION DE DB "MY_SHOP"\\\\\\\\\\\\\\\\\\**
+*********************************************************************************
+
+
+
+- En la carpeta de origen, buscar y en entrar a la carpeta "Script de creacion BD".
+
+- En esta carpeta encontraras 8 scripts .sql enumerados para su ejecucion secuencial de la sigueinte manera:
+	*1 01-CreateSchemaAndTables.sql
+	*2 02-CreateTriggers.sql
+	*3 03-InsertRegister.sql
+	*4 04-CreateViews.sql
+	*5 05-CreateFunction.sql
+	*6 06-CreateStoredPocedures
+	*7 07-CreateUsers.sql
+	*8 08-Transaction.sql
+
+- En esta carpeta se encuetran tambien 2 archivos .sql para ejecutarse en los siguientes casos:
+	*1 BackUpDB.sql (Se debe ejecutar este script solo en caso de querer importar la BD y no crearla)
+	*2 TestFunctionAndProcedures.sql(Este archivo debe ser ejecutado linea por linea a fin de comprobar el funcionamiento de los procedimientos y funciones,
+	SIEMPRE Y CUANDO NO SE HALLA HECHO NINGUNA OPERACION TRAS LA CREACION DE LA BD, SE RECOMIENDA que sea ejecutado por el DBA o un usuario habil en el manejo de BBDD).

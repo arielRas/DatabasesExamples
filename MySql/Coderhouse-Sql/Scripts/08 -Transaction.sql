@@ -1,0 +1,19 @@
+USE MY_SHOP; 
+
+SET AUTOCOMMIT = 0;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Transaccion para eliminar 20 registros de la table "SALES" y deshacerlo con ROLLBACK
+START TRANSACTION;
+DELETE FROM SALES WHERE ID_SALE BETWEEN 1 AND 10;
+DELETE FROM SALES WHERE ID_SALE BETWEEN 27 AND 30;
+ROLLBACK;
+COMMIT;
+
+
+-- Transaccion para la insercion de 3 registros en la tabla "SALES"
+START TRANSACTION;
+INSERT INTO CLIENTS VALUES(DEFAULT,20357275678,'EcoCars',DEFAULT,1,'materiales.ecocars@.gmail.com',DEFAULT,18, 4111,'Maria de las flores 985',476269587,1164236854);
+INSERT INTO CLIENTS VALUES(DEFAULT,20357279178,'Cristian Daniel',"Menendez",0,'danielGamer2000@.gmail.com',DEFAULT,1, 2942,'Ciudad de la Paz 1868',1169851472,DEFAULT);
+INSERT INTO CLIENTS VALUES(DEFAULT,20357275678,'Lorena Gisela','Estebanez',0,'lore.g.84@yahoo.com.ar',DEFAULT,1, 1824,'Pergamino 63',1145896324,DEFAULT);
+COMMIT;
