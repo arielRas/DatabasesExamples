@@ -1,0 +1,67 @@
+SUSODA
+
+Hernán Ibarra desea implementar un sistema que le permita producir la cantidad de soda
+necesaria para no tener stock en grandes cantidades, y de esta forma no inmovilizar el
+capital de la empresa, y ahorrarle importantes costos a la empresa.
+
+Para llevar a cabo esta tarea Hernán lo ha contratado a usted, quién al ser un estudiante
+avanzado de la carrera de sistemas de información está en condiciones de desarrollar un
+modelo de datos en 3FN para cubrir las necesidades del nuevo sistema.
+
+En una entrevista mantenida con Luis Azcurra nos cuenta que la manera en la que trabaja
+la empresa es la siguiente:
+
+Al ingresar un nuevo pedido el departamento de ventas registra el número de cliente, el o
+los productos solicitados, la cantidad pedida, el lugar de entrega, el plazo de entrega y la
+forma de pago (efectivo o cuenta corriente).
+
+Luego de cargado el pedido ventas envía el mismo a almacenes quien prepara el pedido,
+de no haber suficientes unidades del producto en stock se solicita a producción la
+confección de las unidades faltantes. Producción con el parte recibido de almacenes
+procede a la fabricación de lo solicitado, previo control de las cantidades existentes en
+stock de los insumos necesarios para la fabricación del producto, por lo que resulta
+necesario poder conocer que insumos componen cada producto, la unidad de medida del
+mismo y la cantidad. En caso de que producción detecte que la cantidad de insumos
+disponibles menos la cantidad necesaria para la elaboración del producto sea menor al
+punto de reposición (stock mínimo) del insumo, emite una solicitud a compras para la
+adquisición de los mismos, informando en dicha solicitud también la cantidad que es
+necesaria adquirir y el plazo de entrega máximo que debe cumplir el proveedor.
+
+Con la llegada de las solicitudes de compra de insumos, el departamento de compras
+contacta a los distintos proveedores para ver si estos pueden satisfacer la demanda,
+solicitando que envíen una cotización en la cuál incluyan el tiempo de entrega, las
+cantidades y el precio del insumo.
+
+Dado que existen casos en donde el proveedor no es capaz de proveer el total de las
+unidades solicitadas es que resulta necesario también guardar las cantidades cotizadas.
+Una vez que se tienen las diferentes cotizaciones las mismas son cargadas en el sistema
+y es realizada una comparación de las mismas.
+
+Una vez seleccionada la mejor opción se emite una orden de compra, la cuál posee los
+siguientes datos:
+ -Cabecera: Nombre del proveedor y Fecha emisión.
+ -Renglón: Insumo/s a adquirirse, cantidad, precio acordado y cotización asociada.
+
+Al momento de la recepción de los insumos comprados los mismos son ingresados en el
+stock y como constancia se emite un comprobante de recepción de insumos, el cuál debe
+ser registrado en el sistema. Los datos informados en dicho comprobante son: Orden/es
+de compra relacionada/s, Fecha de recepción y cantidad recibida. Es importante poder
+guardar la cantidad que se recibió dado que el proveedor puede llegar a entregar de más
+o menos.
+
+A medida que la producción termina los productos, los mismos son enviados al sector
+almacenes acompañados de un formulario de nombre transferencia de productos
+terminados, en este se incluye: Fecha trasladó, producto y cantidad. Con este formulario
+en almacén se procede al alta de los productos en el stock.
+
+Consideraciones adicionales
+ - Una misma solicitud de compra de insumos puede incluir más de un insumo.
+ - No todos los proveedores necesariamente deben proveer todos los insumos.
+ - La empresa sólo opera con clientes residentes en el país, pero los mismos pueden encontrarse en cualquier provincia.
+ - De los clientes es importante conocer su email y los teléfonos de contacto.
+ - La forma de pago de un pedido de venta es única para todo el pedido.
+ - El lugar y plazo de entrega de un pedido puede no ser el mismo para todos los productos pedidos.
+ - Una cotización recibida por parte del proveedor puede hacer referencia a más de una solicitud de cotización emitida.
+ - Toda cotización tiene una fecha de vencimiento.
+ - Una orden de compra puede agrupar varias cotizaciones distintas.
+ - Las cantidades incluidas en una orden de compra siempre son por el total de unidades informadas por el proveedor en la cotización.

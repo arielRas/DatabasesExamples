@@ -53,6 +53,6 @@ El enfoque estuvo puesto tanto en el diseño lógico y la normalización, como e
 
 ## 🖼️ Vista del modelo lógico
 
-![Diagrama lógico](./LogicDiagram.png)
+[Diagrama lógico](./Diagrams/LogicDiagram.png)
 
 ---

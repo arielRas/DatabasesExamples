@@ -1,0 +1,67 @@
+/**************************************************************************/
+/**************************************************************************/
+/**********     INSERCION DE DATOS BD SUSODA_OLAP_ESTRELLA       **********/
+/**************************************************************************/
+/**************************************************************************/
+
+USE SusodaOlapDb;
+
+--DIM_PROVEEDOR
+INSERT INTO DIM_PROVEEDOR
+SELECT
+	P.ID_PROVEEDOR,
+	P.NOMBRE,
+	P.PROVINCIA
+FROM 
+	SusodaOltpDb.dbo.PROVEEDOR AS P;
+
+
+--DIM_INSUMO
+INSERT INTO DIM_INSUMO
+SELECT
+	I.ID_INSUMO,
+	I.NOMBRE,
+	I.UNIDAD_MEDIDA
+FROM
+	SusodaOltpDb.dbo.INSUMO AS I;
+
+
+--DIM_TIEMPO
+INSERT INTO DIM_TIEMPO
+SELECT DISTINCT
+	C.FECHA_EMISION AS [Fecha],
+	DATEPART(YEAR, C.FECHA_EMISION) AS [Año],
+	DATEPART(MONTH, C.FECHA_EMISION) AS [Mes del año],
+	DATENAME(MONTH, C.FECHA_EMISION) AS [Mes],
+	DATEPART(DAY, C.FECHA_EMISION) AS [Dia del mes],
+	DATENAME(WEEKDAY, C.FECHA_EMISION) AS [Dia],
+	DATEPART(QUARTER, C.FECHA_EMISION) AS [Trimestre]
+FROM 
+	SusodaOltpDb.dbo.COTIZACION AS C
+WHERE
+	EXISTS(
+		SELECT *
+		FROM SusodaOltpDb.dbo.DETALLE_COTIZACION AS DC
+		WHERE 
+			C.ID_COTIZACION = DC.ID_COTIZACION 
+			AND DC.ID_COMPRA IS NOT NULL			
+	);
+
+
+--FACT_COTIZACION
+INSERT INTO FACT_COTIZACION
+SELECT
+	(SELECT ID_PROVEEDOR FROM DIM_PROVEEDOR AS DP WHERE DP.CODIGO = C.ID_PROVEEDOR) AS [ID_PROVEEDOR],
+	(SELECT ID_INSUMO FROM DIM_INSUMO AS DI WHERE DI.CODIGO = DC.ID_INSUMO) AS [ID_INSUMO],
+	(SELECT ID_TIEMPO FROM DIM_TIEMPO AS DT WHERE DT.FECHA = C.FECHA_EMISION) AS [ID_TIEMPO],
+	DATEDIFF(DAY, C.FECHA_EMISION, C.FECHA_VENCIMIENTO) AS [Dias de validez],
+	DC.PRECIO,
+	DC.CANT_COTIZADA,
+	DC.PRECIO * DC.CANT_COTIZADA AS [Subtotal]
+FROM 
+	SusodaOltpDb.dbo.COTIZACION AS C
+JOIN
+	SusodaOltpDb.dbo.DETALLE_COTIZACION AS DC
+	ON C.ID_COTIZACION = DC.ID_COTIZACION
+WHERE
+	DC.ID_COMPRA IS NOT NULL; --Podria hacerse sin el where para incluir las cotizaciones que no fueron compradas..
